@@ -2,7 +2,9 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QGraphicsView>
+#include <QTimer>
 #include "ui_Arcanoid.h"
+#include "GameArea.h"
 
 class Arcanoid : public QMainWindow
 {
@@ -18,6 +20,9 @@ private:
 
     QGraphicsView* _view = nullptr;
     QGraphicsScene* _scene = nullptr;
+    QTimer* _timer = nullptr;
+
+    GameArea* _gameArea = nullptr;
 
     Ui::ArcanoidClass ui;
 };
