@@ -19,11 +19,11 @@ int Platform::height() {
 }
 
 void Platform::moveRight() {
-    setX(x() + dx);
+    setX(x() + _speed);
 }
 
 void Platform::moveLeft() {
-    setX(x() - dx);
+    setX(x() - _speed);
 }
 
 QRectF Platform::boundingRect() const {

@@ -10,7 +10,6 @@ Ball::Ball(QGraphicsItem* parent, QPointF& startPosition) {
 }
 
 Ball::~Ball() {
-
 }
 
 int Ball::radius() {
@@ -24,22 +23,40 @@ void Ball::launch() {
     }
 }
 
-void Ball::changeDirection(CollideSide side) {
+void Ball::changeDirection(CollideSide side, double platformPlace) {
     if (side == CollideSide::UP) {
         _angle *= -1;
+    }
+    else if (side == CollideSide::PLATFORM) {
+        if (_angle >= 0) {
+            return;
+        }
+        _angle *= -1;
+        _angle -= _platformCoef * platformPlace;
     }
     else {
         _angle = M_PI - _angle;
     }
+    if (_angle > M_PI) {
+        _angle -= 2 * M_PI;
+    }
+    if (_angle < -M_PI) {
+        _angle += 2 * M_PI;
+    }
 }
 
 void Ball::move() {
-    double cx = x();
-    double cy = y();
-    double dx = cx + _currentSpeed * cos(_angle);
-    double dy = cy - _currentSpeed * sin(_angle);
-    setX(dx);
-    setY(dy);
+    moveBy(_currentSpeed * cos(_angle), -_currentSpeed * sin(_angle));
+}
+
+void Ball::stop() {
+    _currentSpeed = 0;
+}
+
+QPainterPath Ball::shape() const {
+    QPainterPath path;
+    path.addEllipse(boundingRect());
+    return path;
 }
 
 QRectF Ball::boundingRect() const {
