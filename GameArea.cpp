@@ -91,7 +91,7 @@ void GameArea::manageCollisions() {
             }
         }
         if (check) {
-            collidingBlock->hit();
+            collidingBlock->hit(_ball);
         }
     }
 }

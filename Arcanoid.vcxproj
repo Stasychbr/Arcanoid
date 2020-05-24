@@ -84,9 +84,11 @@
   <ItemGroup>
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="Bonus.cpp" />
     <ClCompile Include="GameArea.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="SpeedBlock.cpp" />
     <QtRcc Include="Arcanoid.qrc" />
     <QtUic Include="Arcanoid.ui" />
     <QtMoc Include="Arcanoid.h" />
@@ -94,7 +96,9 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bonus.h" />
     <ClInclude Include="Platform.h" />
+    <ClInclude Include="SpeedBlock.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GameArea.h" />

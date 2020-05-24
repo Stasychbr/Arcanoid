@@ -15,6 +15,7 @@ public:
 private:
     static const int _radius = 10;
     static const int _speed = 4.0;
+    static const int _maxSpeed = 2 * _speed;
     const double _platformCoef = 0.4;
     
     double _currentSpeed = 0;
@@ -32,6 +33,7 @@ public:
     bool changeDirection(CollideSide side, double platformPlace = 0);
     void move();
     void stop();
+    void speedUp();
 
     QPainterPath shape() const override;
     QRectF boundingRect() const override;

@@ -81,6 +81,12 @@ void Ball::stop() {
     _currentSpeed = 0;
 }
 
+void Ball::speedUp() {
+    if (_currentSpeed < _maxSpeed) {
+        _currentSpeed++;
+    }
+}
+
 QPainterPath Ball::shape() const {
     QPainterPath path;
     path.addEllipse(boundingRect());

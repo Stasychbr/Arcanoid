@@ -1,4 +1,6 @@
 #include "Grid.h"
+#include <random>
+#include <QRandomGenerator>
 
 Grid::Grid(QGraphicsItem* parent, QRectF& area) {
     setParentItem(parent);
@@ -8,11 +10,21 @@ Grid::Grid(QGraphicsItem* parent, QRectF& area) {
     for (int i = 0; i < _vertSize; i++) {
         _blocks.push_back(std::vector<Block*> {});
         for (int j = 0; j < _horSize; j++) {
-            _blocks[i].push_back(new Block(this, blockHeight, blockWidth));
+            _blocks[i].push_back(generateBlock(blockHeight, blockWidth));
             _blocks[i][j]->setPos(j * blockWidth + 0.5 * blockWidth, i * blockHeight + 0.5 * blockHeight);
             //_blocks[i][j]->_posX = j; //debug
             //_blocks[i][j]->_posY = i; //debug 
         }
+    }
+}
+
+Block* Grid::generateBlock(int blockHeight, int blockWidth) {
+    std::geometric_distribution<int> blocksDistr(0.4);
+    switch (blocksDistr(*QRandomGenerator::global())) {
+    case 1:
+        return (Block*)new SpeedBlock(this, blockHeight, blockWidth);
+    default:
+        return new Block(this, blockHeight, blockWidth);
     }
 }
 

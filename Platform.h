@@ -7,7 +7,7 @@ class Platform : public QGraphicsItem {
 private:
     static const int _horSize = 80;
     static const int _vertSize = 15;
-    const double _speed = 3.0;
+    const double _speed = 4.0;
 
     double _posX = 0;
 

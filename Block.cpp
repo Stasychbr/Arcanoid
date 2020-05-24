@@ -26,15 +26,7 @@ int Block::hp() {
     return _hp;
 }
 
-void Block::setWidth(int width) {
-    _width = width;
-}
-
-void Block::setHeight(int height) {
-   _height = height;
-}
-
-void Block::hit() {
+void Block::hit(Ball* ball) {
     _hp--;
     update();
     if (_hp == 0) {
