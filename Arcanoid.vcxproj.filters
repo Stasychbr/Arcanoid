@@ -58,9 +58,6 @@
     <QtRcc Include="Arcanoid.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Platform.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="GameArea.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -73,6 +70,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Grid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

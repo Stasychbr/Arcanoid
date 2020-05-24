@@ -94,7 +94,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="Platform.h" />
+    <ClInclude Include="Platform.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GameArea.h" />

@@ -11,6 +11,14 @@ Block::~Block() {
 
 }
 
+int Block::height() {
+    return _height;
+}
+
+int Block::width() {
+    return _width;
+}
+
 void Block::setWidth(int width) {
     _width = width;
 }

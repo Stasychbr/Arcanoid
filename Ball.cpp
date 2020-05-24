@@ -4,6 +4,7 @@
 
 #define M_PI 3.14159265358979323846
 
+
 Ball::Ball(QGraphicsItem* parent, QPointF& startPosition) {
     setParentItem(parent);
     setPos(startPosition);
@@ -16,21 +17,47 @@ int Ball::radius() {
     return _radius;
 }
 
-void Ball::launch() {
+void Ball::stickToPlatform(Platform* platform) {
+    setParentItem(platform);
+    setPos(QPointF(0, -platform->height() / 2 - radius()));
+}
+
+void Ball::launch(QGraphicsItem* gameArea) {
     if (_currentSpeed == 0) {
+        QPointF newPos = mapToItem(gameArea, pos());
+        setParentItem(gameArea);
+        setPos(newPos);
         _angle = M_PI / 2;
         _currentSpeed = _speed;
     }
 }
 
+bool Ball::falseSignal(CollideSide side) {
+    if (side == CollideSide::UP && _angle < 0) {
+        return true;
+    }
+    else if ((side == CollideSide::DOWN || side == CollideSide::PLATFORM) && _angle > 0) {
+        return true;
+    }
+    else if (side == CollideSide::RIGHT && (_angle < -M_PI / 2 || _angle > M_PI / 2)) {
+        return true;
+    }
+    else if (side == CollideSide::LEFT && _angle < M_PI / 2 && _angle > -M_PI / 2) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 void Ball::changeDirection(CollideSide side, double platformPlace) {
-    if (side == CollideSide::UP) {
+    if (falseSignal(side)) {
+        return;
+    }
+    if (side == CollideSide::UP || side == CollideSide::DOWN) {
         _angle *= -1;
     }
     else if (side == CollideSide::PLATFORM) {
-        if (_angle >= 0) {
-            return;
-        }
         _angle *= -1;
         _angle -= _platformCoef * platformPlace;
     }

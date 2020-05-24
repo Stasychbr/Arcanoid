@@ -1,9 +1,11 @@
 #pragma once
 
 #include <QGraphicsObject>
+#include <QGraphicsItem>
 #include "Platform.h"
 #include "Ball.h"
 #include "Grid.h"
+#include "Block.h"
 
 class GameArea : public QGraphicsObject {
 
@@ -24,7 +26,7 @@ private:
     void timerEvent(QTimerEvent* e) override;
     void managePlatform();
     void manageBall();
-    void handleBallPlatformCollision();
+    void manageCollisions();
     void startNewLife();
 public:
     GameArea(QRectF& area);

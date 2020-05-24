@@ -2,8 +2,7 @@
 
 #include <QGraphicsObject>
 
-class Platform : public QGraphicsObject {
-    Q_OBJECT
+class Platform : public QGraphicsItem {
 
 private:
     static const int _horSize = 80;

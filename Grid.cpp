@@ -10,6 +10,8 @@ Grid::Grid(QGraphicsItem* parent, QRectF& area) {
         for (int j = 0; j < _horSize; j++) {
             _blocks[i].push_back(new Block(this, blockHeight, blockWidth));
             _blocks[i][j]->setPos(j * blockWidth + 0.5 * blockWidth, i * blockHeight + 0.5 * blockHeight);
+            _blocks[i][j]->_posX = j; //debug
+            _blocks[i][j]->_posY = i; //debug 
         }
     }
 }
@@ -20,6 +22,17 @@ Grid::~Grid() {
             delete block;
         }
     }
+}
+
+Block* Grid::ballCollision(QGraphicsItem* ball) {
+    for (auto& row: _blocks) {
+        for (auto& block : row) {
+            if (block->collidesWithItem(ball)) {
+                return block;
+            }
+        }
+    }
+    return nullptr;
 }
 
 QRectF Grid::boundingRect() const {

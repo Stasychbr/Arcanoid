@@ -14,6 +14,9 @@ class Grid : public QGraphicsItem {
 public:
     Grid(QGraphicsItem* parent, QRectF& area);
     ~Grid();
+
+    Block* ballCollision(QGraphicsItem* ball);
+
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 };
