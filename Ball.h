@@ -29,7 +29,7 @@ public:
 
     void stickToPlatform(Platform* platform);
     void launch(QGraphicsItem* gameArea);
-    void changeDirection(CollideSide side, double platformPlace = 0);
+    bool changeDirection(CollideSide side, double platformPlace = 0);
     void move();
     void stop();
 

@@ -50,9 +50,9 @@ bool Ball::falseSignal(CollideSide side) {
     }
 }
 
-void Ball::changeDirection(CollideSide side, double platformPlace) {
+bool Ball::changeDirection(CollideSide side, double platformPlace) {
     if (falseSignal(side)) {
-        return;
+        return false;
     }
     if (side == CollideSide::UP || side == CollideSide::DOWN) {
         _angle *= -1;
@@ -70,6 +70,7 @@ void Ball::changeDirection(CollideSide side, double platformPlace) {
     if (_angle < -M_PI) {
         _angle += 2 * M_PI;
     }
+    return true;
 }
 
 void Ball::move() {

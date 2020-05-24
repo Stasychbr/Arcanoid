@@ -71,23 +71,27 @@ void GameArea::manageCollisions() {
     Block* collidingBlock = _blocksGrid->ballCollision(_ball);
     if (collidingBlock) {
         QPointF blockCoords = mapFromItem(_blocksGrid, collidingBlock->pos());
-        double dx = _ball->x() - blockCoords.x();//_ball->x() - collidingBlock->x();
-        double dy = _ball->y() - blockCoords.y();//_ball->y() - collidingBlock->y();
-        if (dy > -collidingBlock->height() / 2 && dy < collidingBlock->height() / 2) {
-            if (dx < 0/*-collidingBlock->width() / 2*/) {
-                _ball->changeDirection(Ball::CollideSide::RIGHT);
+        double dx = _ball->x() - blockCoords.x();
+        double dy = _ball->y() - blockCoords.y();
+        bool check = false;
+        if (dx > -collidingBlock->width() / 2 && dx < collidingBlock->width() / 2) {
+            if (dy < 0) {
+                check = _ball->changeDirection(Ball::CollideSide::DOWN);
             }
             else {
-                _ball->changeDirection(Ball::CollideSide::LEFT);
+                check = _ball->changeDirection(Ball::CollideSide::UP);
             }
         }
-        else if (dx > -collidingBlock->width() / 2 && dx < collidingBlock->width() / 2) {
-            if (dy < 0) {
-                _ball->changeDirection(Ball::CollideSide::DOWN);
+        else if (dy > -collidingBlock->height() / 2 && dy < collidingBlock->height() / 2) {
+            if (dx < 0) {
+                check = _ball->changeDirection(Ball::CollideSide::RIGHT);
             }
             else {
-                _ball->changeDirection(Ball::CollideSide::UP);
+                check = _ball->changeDirection(Ball::CollideSide::LEFT);
             }
+        }
+        if (check) {
+            collidingBlock->hit();
         }
     }
 }
