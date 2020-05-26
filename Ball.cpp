@@ -23,12 +23,12 @@ void Ball::stickToPlatform(Platform* platform) {
 }
 
 void Ball::launch(QGraphicsItem* gameArea) {
-    if (_currentSpeed == 0) {
+    if (_speed == 0) {
         QPointF newPos = mapToItem(gameArea, pos());
         setParentItem(gameArea);
         setPos(newPos);
         _angle = M_PI / 2;
-        _currentSpeed = _speed;
+        _speed = _startSpeed;
     }
 }
 
@@ -74,16 +74,22 @@ bool Ball::changeDirection(CollideSide side, double platformPlace) {
 }
 
 void Ball::move() {
-    moveBy(_currentSpeed * cos(_angle), -_currentSpeed * sin(_angle));
+    moveBy(_speed * cos(_angle), -_speed * sin(_angle));
 }
 
 void Ball::stop() {
-    _currentSpeed = 0;
+    _speed = 0;
 }
 
 void Ball::speedUp() {
-    if (_currentSpeed < _maxSpeed) {
-        _currentSpeed++;
+    if (_speed < _maxSpeed) {
+        _speed++;
+    }
+}
+
+void Ball::reduceSpeed() {
+    if (_speed > _minSpeed) {
+        _speed--;
     }
 }
 

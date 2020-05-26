@@ -4,10 +4,12 @@
 #include <QRandomGenerator>
 
 Block::Block(QGraphicsItem* parent, int height, int width) {
+    std::uniform_int_distribution<int> bonusDistr(1, _bonusChance);
     setParentItem(parent);
     _height = height;
     _width = width;
     _hp = QRandomGenerator::global()->bounded(1, _maxHp + 1);
+    _hasBonus = bonusDistr(*QRandomGenerator::global()) == 1;
 }
 
 Block::~Block() {
@@ -24,6 +26,10 @@ int Block::width() {
 
 int Block::hp() {
     return _hp;
+}
+
+bool Block::hasBonus() {
+    return _hasBonus;
 }
 
 void Block::hit(Ball* ball) {

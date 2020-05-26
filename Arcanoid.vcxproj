@@ -85,9 +85,11 @@
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="Bonus.cpp" />
+    <ClCompile Include="EnlargePlatformBonus.cpp" />
     <ClCompile Include="GameArea.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="ReduceBallSpeed.cpp" />
     <ClCompile Include="SpeedBlock.cpp" />
     <ClCompile Include="UnbreakableBlock.cpp" />
     <QtRcc Include="Arcanoid.qrc" />
@@ -98,7 +100,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bonus.h" />
+    <ClInclude Include="EnlargePlatformBonus.h" />
     <ClInclude Include="Platform.h" />
+    <ClInclude Include="ReduceBallSpeed.h" />
     <ClInclude Include="SpeedBlock.h" />
     <ClInclude Include="UnbreakableBlock.h" />
   </ItemGroup>

@@ -14,11 +14,12 @@ public:
     };
 private:
     static const int _radius = 10;
-    static const int _speed = 4.0;
-    static const int _maxSpeed = 2 * _speed;
+    static const int _startSpeed = 4.0;
+    static const int _maxSpeed = 2 * _startSpeed;
+    static const int _minSpeed = _startSpeed / 2;
     const double _platformCoef = 0.4;
     
-    double _currentSpeed = 0;
+    double _speed = 0;
     double _angle = 0; // from -pi to pi
 
     bool falseSignal(CollideSide side);
@@ -34,6 +35,7 @@ public:
     void move();
     void stop();
     void speedUp();
+    void reduceSpeed();
 
     QPainterPath shape() const override;
     QRectF boundingRect() const override;

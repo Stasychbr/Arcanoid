@@ -4,6 +4,7 @@
 
 UnbreakableBlock::UnbreakableBlock(QGraphicsItem* parent, int height, int width): Block(parent, height, width) {
     _hp = INT_MAX;
+    _hasBonus = false;
 }
 
 void UnbreakableBlock::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) {

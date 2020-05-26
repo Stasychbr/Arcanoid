@@ -4,6 +4,7 @@
 Platform::Platform(QGraphicsItem* parent, QPointF& startPos) {
     setParentItem(parent);
     setPos(startPos);
+    _horSize = _startHorSize;
 }
 
 Platform::~Platform() {
@@ -24,6 +25,16 @@ void Platform::moveRight() {
 
 void Platform::moveLeft() {
     setX(x() - _speed);
+}
+
+void Platform::enlarge() {
+    if (_horSize < _maxHorSize) {
+        _horSize += _enlargeSize;
+    }
+}
+
+void Platform::shorten() {
+    _horSize -= _cutSize;
 }
 
 QRectF Platform::boundingRect() const {

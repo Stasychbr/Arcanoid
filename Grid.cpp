@@ -23,7 +23,7 @@ Block* Grid::generateBlock(int blockHeight, int blockWidth) {
     switch (blocksDistr(*QRandomGenerator::global())) {
     case 1:
         return (Block*)new SpeedBlock(this, blockHeight, blockWidth);
-    case 2:
+    case 3:
         return (Block*)new UnbreakableBlock(this, blockHeight, blockWidth);
     default:
         return new Block(this, blockHeight, blockWidth);
@@ -47,6 +47,19 @@ Block* Grid::ballCollision(QGraphicsItem* ball) {
         }
     }
     return nullptr;
+}
+
+QPointF Grid::findBonusPlace(Block* block) {
+    int column = (block->x() - block->width() / 2) / block->width();
+    int row = (block->y() - block->height() / 2) / block->height();
+    int lowestRow = _vertSize;
+    for (int i = _vertSize - 1; i >= row; i--) {
+        if (_blocks[i][column]->isVisible()) {
+            lowestRow = i;
+            break;
+        }
+    }
+    return QPointF(block->x(), ++lowestRow * block->height() + block->height() / 2);
 }
 
 QRectF Grid::boundingRect() const {

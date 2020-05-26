@@ -1,6 +1,10 @@
 #include "GameArea.h"
 #include <QKeyEvent>
 #include <windows.h>
+#include <random>
+#include <QRandomGenerator>
+#include "EnlargePlatformBonus.h"
+#include "ReduceBallSpeed.h"
 
 GameArea::GameArea(QRectF& area) {
     _area = area;
@@ -18,6 +22,14 @@ GameArea::~GameArea() {
     delete _platform;
 }
 
+Platform* GameArea::platform() {
+    return _platform;
+}
+
+Ball* GameArea::ball() {
+    return _ball;
+}
+
 QRectF GameArea::boundingRect() const {
     return _area;
 }
@@ -29,6 +41,7 @@ void GameArea::timerEvent(QTimerEvent* e) {
     managePlatform();
     manageBall();
     manageCollisions();
+    manageBonuses();
 }
 
 void GameArea::managePlatform() {
@@ -92,6 +105,39 @@ void GameArea::manageCollisions() {
         }
         if (check) {
             collidingBlock->hit(_ball);
+            if (collidingBlock->hasBonus()) {
+                spawnBonus(collidingBlock);
+            }
+        }
+    }
+}
+
+void GameArea::spawnBonus(Block* block) {
+    std::geometric_distribution<int> blocksDistr(0.4);
+    switch (blocksDistr(*QRandomGenerator::global())) {
+    case 1:
+        _bonuses.push_back((Bonus*)new ReduceBallSpeed(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
+        break;
+    default:
+        _bonuses.push_back((Bonus*)new EnlargePlatformBonus(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
+    }
+}
+
+void GameArea::manageBonuses() {
+    for (auto it = _bonuses.begin(); it != _bonuses.end();) {
+        auto bonus = *it;
+        bonus->move();
+        if (bonus->collidesWithItem(_platform)) {
+            bonus->effect(this);
+            it = _bonuses.erase(it);
+            delete bonus;
+        }
+        else if (bonus->y() > _area.height() + bonus->size()) {
+            it = _bonuses.erase(it);
+            delete bonus;
+        }
+        else {
+            ++it;
         }
     }
 }

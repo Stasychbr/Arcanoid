@@ -2,6 +2,7 @@
 #include <QPainter>
 
 SpeedBlock::SpeedBlock(QGraphicsItem* parent, int height, int width):Block(parent, height, width) {
+    _hasBonus = false;
 }
 
 void SpeedBlock::hit(Ball* ball) {
