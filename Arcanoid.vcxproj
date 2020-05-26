@@ -89,6 +89,7 @@
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="SpeedBlock.cpp" />
+    <ClCompile Include="UnbreakableBlock.cpp" />
     <QtRcc Include="Arcanoid.qrc" />
     <QtUic Include="Arcanoid.ui" />
     <QtMoc Include="Arcanoid.h" />
@@ -99,6 +100,7 @@
     <ClInclude Include="Bonus.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="SpeedBlock.h" />
+    <ClInclude Include="UnbreakableBlock.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GameArea.h" />

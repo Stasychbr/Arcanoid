@@ -4,6 +4,7 @@
 #include <vector>
 #include "Block.h"
 #include "SpeedBlock.h"
+#include "UnbreakableBlock.h"
 
 class Grid : public QGraphicsItem {
     static const int _horSize = 5;

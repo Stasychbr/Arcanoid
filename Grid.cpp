@@ -23,6 +23,8 @@ Block* Grid::generateBlock(int blockHeight, int blockWidth) {
     switch (blocksDistr(*QRandomGenerator::global())) {
     case 1:
         return (Block*)new SpeedBlock(this, blockHeight, blockWidth);
+    case 2:
+        return (Block*)new UnbreakableBlock(this, blockHeight, blockWidth);
     default:
         return new Block(this, blockHeight, blockWidth);
     }
