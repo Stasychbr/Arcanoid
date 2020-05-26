@@ -5,6 +5,9 @@
 #include <QRandomGenerator>
 #include "EnlargePlatformBonus.h"
 #include "ReduceBallSpeed.h"
+#include "StickToPlatform.h"
+#include "BottomBlock.h"
+#include "BottomBonus.h"
 
 GameArea::GameArea(QRectF& area) {
     _area = area;
@@ -20,6 +23,9 @@ GameArea::~GameArea() {
     delete _blocksGrid;
     delete _ball;
     delete _platform;
+    for (auto it = _bonuses.begin(); it != _bonuses.end(); it++) {
+        delete *it;
+    }
 }
 
 Platform* GameArea::platform() {
@@ -80,14 +86,18 @@ void GameArea::manageCollisions() {
     if (_platform->collidesWithItem(_ball)) {
         double platformPlace = 2 * (_ball->x() - _platform->x()) / _platform->width();
         _ball->changeDirection(Ball::CollideSide::PLATFORM, platformPlace);
+        doHitToPlatformQuery();
     }
     Block* collidingBlock = _blocksGrid->ballCollision(_ball);
+    if (!collidingBlock) {
+        collidingBlock = checkBonusBlocksCollisions();
+    }
     if (collidingBlock) {
         QPointF blockCoords = mapFromItem(_blocksGrid, collidingBlock->pos());
         double dx = _ball->x() - blockCoords.x();
         double dy = _ball->y() - blockCoords.y();
         bool check = false;
-        if (dx > -collidingBlock->width() / 2 && dx < collidingBlock->width() / 2) {
+        if (dx > -collidingBlock->width() / 2 - Ball::radius() && dx < collidingBlock->width() / 2 + Ball::radius()) {
             if (dy < 0) {
                 check = _ball->changeDirection(Ball::CollideSide::DOWN);
             }
@@ -95,7 +105,7 @@ void GameArea::manageCollisions() {
                 check = _ball->changeDirection(Ball::CollideSide::UP);
             }
         }
-        else if (dy > -collidingBlock->height() / 2 && dy < collidingBlock->height() / 2) {
+        else if (dy > -collidingBlock->height() / 2 - Ball::radius() && dy < collidingBlock->height() / 2 + Ball::radius()) {
             if (dx < 0) {
                 check = _ball->changeDirection(Ball::CollideSide::RIGHT);
             }
@@ -113,14 +123,43 @@ void GameArea::manageCollisions() {
 }
 
 void GameArea::spawnBonus(Block* block) {
-    std::geometric_distribution<int> blocksDistr(0.4);
+    std::geometric_distribution<int> blocksDistr(0.5);
     switch (blocksDistr(*QRandomGenerator::global())) {
     case 1:
+        _bonuses.push_back((Bonus*)new BottomBonus(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
+        break;
+    case 2:
         _bonuses.push_back((Bonus*)new ReduceBallSpeed(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
+        break;
+    case 3:
+        _bonuses.push_back((Bonus*)new StickToPlatform(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
         break;
     default:
         _bonuses.push_back((Bonus*)new EnlargePlatformBonus(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
     }
+}
+
+void GameArea::spawnBottomBlock() {
+    Block* block = new BottomBlock(this, _platform->height(), _area.width(), QPointF(_area.width() / 2, _area.height()));
+    _bonusBlocks.push_back(block);
+       
+}
+
+Block* GameArea::checkBonusBlocksCollisions() {
+    for (auto it = _bonusBlocks.begin(); it != _bonusBlocks.end();) {
+        auto block = *it;
+        if (block->hp() == 0) {
+            it = _bonusBlocks.erase(it);
+            delete block;
+        }
+        else if (block->collidesWithItem(_ball)) {
+            return block;
+        }
+        else {
+            it++;
+        }
+    }
+    return nullptr;
 }
 
 void GameArea::manageBonuses() {
@@ -128,16 +167,23 @@ void GameArea::manageBonuses() {
         auto bonus = *it;
         bonus->move();
         if (bonus->collidesWithItem(_platform)) {
-            bonus->effect(this);
-            it = _bonuses.erase(it);
-            delete bonus;
+            if (bonus->type() == Bonus::BonusType::INSTANT) {
+                bonus->effect(this);
+                it = _bonuses.erase(it);
+                delete bonus;
+            }
+            else {
+                _hitToPlatformQuery.push_back(bonus);
+                it = _bonuses.erase(it);
+                bonus->hide();
+            }
         }
         else if (bonus->y() > _area.height() + bonus->size()) {
             it = _bonuses.erase(it);
             delete bonus;
         }
         else {
-            ++it;
+            it++;
         }
     }
 }
@@ -148,3 +194,19 @@ void GameArea::startNewLife() {
     _ball->stop();
     _ball->stickToPlatform(_platform);
 }
+
+void GameArea::doHitToPlatformQuery() {
+    for (auto it = _hitToPlatformQuery.begin(); it != _hitToPlatformQuery.end();) {
+        auto bonus = *it;
+        if (bonus->numberOfExecutions() > 0) {
+            bonus->effect(this);
+            it++;
+        }
+        else {
+            it = _hitToPlatformQuery.erase(it);
+            delete bonus;
+        }
+    }
+}
+
+

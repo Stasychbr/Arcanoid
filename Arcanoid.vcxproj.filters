@@ -68,6 +68,15 @@
     <ClCompile Include="ReduceBallSpeed.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StickToPlatform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BottomBlock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BottomBonus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="Arcanoid.qrc" />
@@ -103,6 +112,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ReduceBallSpeed.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StickToPlatform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BottomBlock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BottomBonus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

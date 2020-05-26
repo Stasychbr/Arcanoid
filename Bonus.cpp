@@ -10,6 +10,14 @@ int Bonus::size() {
     return _size;
 }
 
+Bonus::BonusType Bonus::type() {
+    return _type;
+}
+
+int Bonus::numberOfExecutions() {
+    return _numberOfExecs;
+}
+
 void Bonus::move() {
     setY(y() + _speed);
 }

@@ -23,6 +23,8 @@ private:
     Ball* _ball = nullptr;
     Grid* _blocksGrid = nullptr;
     std::list<Bonus*> _bonuses;
+    std::list<Bonus*> _hitToPlatformQuery;
+    std::list<Block*> _bonusBlocks;
 
     static const int _timerPeriod = 16; //msec
     int _timerID = 0;
@@ -33,6 +35,8 @@ private:
     void manageCollisions();
     void manageBonuses();
     void startNewLife();
+    void doHitToPlatformQuery();
+    Block* checkBonusBlocksCollisions();
 public:
     GameArea(QRectF& area);
     ~GameArea();
@@ -41,6 +45,7 @@ public:
     Ball* ball();
 
     void spawnBonus(Block* block);
+    void spawnBottomBlock();
 
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
