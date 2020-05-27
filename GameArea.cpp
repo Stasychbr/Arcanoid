@@ -4,7 +4,8 @@
 #include <random>
 #include <QRandomGenerator>
 #include <QPainter>
-#include <QMessageBox>
+#include <QFont>
+#include <QGraphicsTextItem>
 #include "EnlargePlatformBonus.h"
 #include "ReduceBallSpeed.h"
 #include "StickToPlatform.h"
@@ -28,6 +29,7 @@ GameArea::~GameArea() {
     delete _ball;
     delete _platform;
     delete _bonusBall;
+    delete _finalText;
     deleteBonuses();
     deleteBonusBlocks();
 }
@@ -162,22 +164,22 @@ void GameArea::spawnBonus(Block* block) {
     std::geometric_distribution<int> blocksDistr(0.5);
     switch (blocksDistr(*QRandomGenerator::global())) {
     case 1:
-        _bonuses.push_back((Bonus*)new SecondBallBonus(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
+        _bonuses.push_back(new ReduceBallSpeed(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
         break;
     case 2:
-        _bonuses.push_back((Bonus*)new ChangeTrajectoryBonus(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
+        _bonuses.push_back(new BottomBonus(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
         break;
     case 3:
-        _bonuses.push_back((Bonus*)new BottomBonus(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
+        _bonuses.push_back(new StickToPlatform(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
         break;
     case 4:
-        _bonuses.push_back((Bonus*)new ReduceBallSpeed(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
+        _bonuses.push_back(new EnlargePlatformBonus(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
         break;
     case 5:
-        _bonuses.push_back((Bonus*)new StickToPlatform(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
+        _bonuses.push_back(new SecondBallBonus(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
         break;
     default:
-        _bonuses.push_back((Bonus*)new EnlargePlatformBonus(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
+        _bonuses.push_back(new ChangeTrajectoryBonus(this, mapFromItem(_blocksGrid, _blocksGrid->findBonusPlace(block))));
     }
 }
 
@@ -191,19 +193,6 @@ void GameArea::spawnSecondBall() {
         _bonusBall = new Ball(_ball);
     }
 }
-
-//void GameArea::spawnMovingBlock() {
-//    QPointF start, end;
-//    int blockHeight, blockWidth;
-//    if (_blocksGrid->findFreeSpace(start, end)) {
-//        start = mapFromItem(_blocksGrid, start);
-//        end = mapFromItem(_blocksGrid, end);
-//        _blocksGrid->blockSize(blockHeight, blockWidth);
-//        _bonusBlocks.push_back(new MovingBlock(this, blockHeight, blockWidth, start, end));
-//    }
-//}
-
-
 
 Block* GameArea::checkBonusBlocksCollisions(Ball* ball) {
     for (auto it = _bonusBlocks.begin(); it != _bonusBlocks.end();) {
@@ -222,26 +211,26 @@ Block* GameArea::checkBonusBlocksCollisions(Ball* ball) {
     return nullptr;
 }
 
-void GameArea::gameOver() {
+void GameArea::makeFinalText(const char* message) {
     killTimer(_timerID);
-    QMessageBox message;
+    _platform->hide();
+    _ball->hide();
+    if (_bonusBall) {
+        _bonusBall->hide();
+    }
     QString scoreString;
     scoreString.setNum(_score);
-    message.setWindowTitle("You lose :(");
-    message.setText("Your score " + scoreString);
-    message.resize({ 400, 400 });
-    message.exec();
+    _finalText = new QGraphicsTextItem(message + scoreString, this);
+    _finalText->setFont(QFont("Helvetica", 16, QFont::Bold));
+    _finalText->setPos(_area.center().x() - _finalText->boundingRect().width() / 2, _area.center().y());
+}
+
+void GameArea::gameOver() {
+    makeFinalText("You lose :( Your score is ");
 }
 
 void GameArea::victory() {
-    killTimer(_timerID);
-    QMessageBox message;
-    QString scoreString;
-    scoreString.setNum(_score);
-    message.setWindowTitle("You won!");
-    message.setText("Your score " + scoreString);
-    message.resize({ 400, 400 });
-    message.exec();
+    makeFinalText("You won! Your score is ");
 }
 
 void GameArea::deleteBonuses() {

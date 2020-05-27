@@ -71,35 +71,6 @@ QPointF Grid::findBonusPlace(Block* block) {
     return QPointF(block->x(), ++lowestRow * block->height() + Bonus::size());
 }
 
-bool Grid::findFreeSpace(QPointF& start, QPointF& end) {
-    int startPlace = 0, endPlace = 0;
-    for (int i = 0; i < _vertSize; i++) {
-        startPlace = 0;
-        endPlace = 0;
-        for (int j = 0; j < _horSize; j++) {
-            if (!_blocks[i][j]->isVisible()) {
-                startPlace = j;
-                endPlace = startPlace;
-                while (j < _horSize && !_blocks[i][j]->isVisible()) {
-                    endPlace++;
-                    j++;
-                }
-            }
-            if (endPlace - startPlace >= 3) {
-                start = _blocks[i][startPlace]->pos();
-                end = _blocks[i][endPlace - 1]->pos();
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-void Grid::blockSize(int& height, int& width) {
-    height = _blocks[0][0]->height();
-    width = _blocks[0][0]->width();
-}
-
 QRectF Grid::boundingRect() const {
     return _area;
 }

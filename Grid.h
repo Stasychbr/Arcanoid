@@ -25,9 +25,6 @@ public:
 
     Block* ballCollision(QGraphicsItem* ball);
     QPointF findBonusPlace(Block* block);
-    bool findFreeSpace(QPointF& start, QPointF& end);
-    
-    void blockSize(int& height, int& width);
 
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;

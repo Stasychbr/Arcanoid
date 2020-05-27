@@ -19,6 +19,7 @@ private:
     const double _blocksHeightCoef = 0.4; // coef * area.height()
     int _score = 0;
 
+    QGraphicsTextItem* _finalText = nullptr;
     QRectF _area;
     Platform* _platform = nullptr;
     Ball* _ball = nullptr;
@@ -42,6 +43,7 @@ private:
     void doHitToPlatformQuery();
     Block* checkBonusBlocksCollisions(Ball* ball);
 
+    void makeFinalText(const char* message);
     void gameOver();
     void victory();
 
@@ -56,7 +58,6 @@ public:
 
     void spawnBonus(Block* block);
     void spawnBottomBlock();
-    //void spawnMovingBlock();
     void spawnSecondBall();
 
     QRectF boundingRect() const override;

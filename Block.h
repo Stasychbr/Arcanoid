@@ -7,7 +7,7 @@
 class Block : public QGraphicsObject {
 protected:
     static const int _maxHp = 4;
-    static const int _bonusChance = 2; // 1/n
+    static const int _bonusChance = 3; // 1/n
     int _width = 0;
     int _height = 0;
     int _hp = 0;
