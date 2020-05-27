@@ -10,6 +10,15 @@ Ball::Ball(QGraphicsItem* parent, QPointF& startPosition) {
     setPos(startPosition);
 }
 
+Ball::Ball(Ball* parentBall) {
+    _angle = M_PI / 2;
+    _speed = _startSpeed;
+    _color = Qt::magenta;
+    setParentItem(parentBall->parentItem());
+    setX(parentBall->x());
+    setY(parentBall->y() - 3 * _radius);
+}
+
 Ball::~Ball() {
 }
 
@@ -50,6 +59,15 @@ bool Ball::falseSignal(CollideSide side) {
     }
 }
 
+void Ball::normaliseAngle() {
+    if (_angle > M_PI) {
+        _angle -= 2 * M_PI;
+    }
+    if (_angle < -M_PI) {
+        _angle += 2 * M_PI;
+    }
+}
+
 bool Ball::changeDirection(CollideSide side, double platformPlace) {
     if (falseSignal(side)) {
         return false;
@@ -64,12 +82,7 @@ bool Ball::changeDirection(CollideSide side, double platformPlace) {
     else {
         _angle = M_PI - _angle;
     }
-    if (_angle > M_PI) {
-        _angle -= 2 * M_PI;
-    }
-    if (_angle < -M_PI) {
-        _angle += 2 * M_PI;
-    }
+    normaliseAngle();
     return true;
 }
 
@@ -93,6 +106,26 @@ void Ball::reduceSpeed() {
     }
 }
 
+void Ball::changeTrajectory(double deltaAngle) {
+    _angle += deltaAngle;
+    normaliseAngle();
+}
+
+void Ball::ballCollision(Ball* anotherBall) {
+    double tmp = _angle;
+    _angle = anotherBall->_angle;
+    anotherBall->_angle = tmp;
+    tmp = _speed;
+    _speed = anotherBall->_speed;
+    anotherBall->_speed = tmp;
+    move();
+    anotherBall->move();
+}
+
+void Ball::makeMainBall() {
+    _color = Qt::yellow;
+}
+
 QPainterPath Ball::shape() const {
     QPainterPath path;
     path.addEllipse(boundingRect());
@@ -104,7 +137,7 @@ QRectF Ball::boundingRect() const {
 }
 
 void Ball::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) {
-    painter->setBrush(Qt::yellow);
+    painter->setBrush(_color);
     painter->drawEllipse(boundingRect());
     Q_UNUSED(option);
     Q_UNUSED(widget);

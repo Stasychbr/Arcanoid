@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <random>
 #include <QRandomGenerator>
+#include "Grid.h"
 
 Block::Block(QGraphicsItem* parent, int height, int width) {
     std::uniform_int_distribution<int> bonusDistr(1, _bonusChance);
@@ -32,12 +33,15 @@ bool Block::hasBonus() {
     return _hasBonus;
 }
 
-void Block::hit(Ball* ball) {
+int Block::hit(Ball* ball) {
     _hp--;
     update();
     if (_hp == 0) {
+        Grid* grid = (Grid*)parentItem();
+        grid->blockWasDestroyed();
         hide();
     }
+    return _scoreForHit;
 }
 
 QRectF Block::boundingRect() const {

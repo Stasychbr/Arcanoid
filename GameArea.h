@@ -17,10 +17,12 @@ class GameArea : public QGraphicsObject {
 private:
     const int _blocksMargin = 4 * Ball::radius();
     const double _blocksHeightCoef = 0.4; // coef * area.height()
+    int _score = 0;
 
     QRectF _area;
     Platform* _platform = nullptr;
     Ball* _ball = nullptr;
+    Ball* _bonusBall = nullptr;
     Grid* _blocksGrid = nullptr;
     std::list<Bonus*> _bonuses;
     std::list<Bonus*> _hitToPlatformQuery;
@@ -31,12 +33,20 @@ private:
 
     void timerEvent(QTimerEvent* e) override;
     void managePlatform();
-    void manageBall();
-    void manageCollisions();
+    void manageBall(Ball* ball);
+    void manageFallOut();
+    void manageCollisions(Ball* ball);
+    void manageBallsCollisions();
     void manageBonuses();
     void startNewLife();
     void doHitToPlatformQuery();
-    Block* checkBonusBlocksCollisions();
+    Block* checkBonusBlocksCollisions(Ball* ball);
+
+    void gameOver();
+    void victory();
+
+    void deleteBonuses();
+    void deleteBonusBlocks();
 public:
     GameArea(QRectF& area);
     ~GameArea();
@@ -46,6 +56,8 @@ public:
 
     void spawnBonus(Block* block);
     void spawnBottomBlock();
+    //void spawnMovingBlock();
+    void spawnSecondBall();
 
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;

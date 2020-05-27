@@ -3,11 +3,12 @@
 
 SpeedBlock::SpeedBlock(QGraphicsItem* parent, int height, int width):Block(parent, height, width) {
     _hasBonus = false;
+    _scoreForHit = _specScoreForHit;
 }
 
-void SpeedBlock::hit(Ball* ball) {
-    Block::hit(ball);
+int SpeedBlock::hit(Ball* ball) {
     ball->speedUp();
+    return Block::hit(ball);
 }
 
 void SpeedBlock::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) {

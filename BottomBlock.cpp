@@ -4,6 +4,7 @@
 BottomBlock::BottomBlock(QGraphicsItem* parent, int height, int width, QPointF& position):Block(parent, height, width) {
     setPos(position);
     _hp = 1;
+    _scoreForHit = 0;
     _hasBonus = false;
 }
 

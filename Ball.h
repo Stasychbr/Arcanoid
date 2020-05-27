@@ -14,17 +14,20 @@ public:
     };
 private:
     static const int _radius = 10;
-    static const int _startSpeed = 4.0;
+    static const int _startSpeed = 4;
     static const int _maxSpeed = 2 * _startSpeed;
     static const int _minSpeed = _startSpeed / 2;
     const double _platformCoef = 0.4;
     
+    QColor _color = Qt::yellow;
     double _speed = 0;
     double _angle = 0; // from -pi to pi
 
     bool falseSignal(CollideSide side);
+    void normaliseAngle();
 public:
     Ball(QGraphicsItem* parent, QPointF& startPosition);
+    Ball(Ball* parentBall);
     ~Ball();
 
     static int radius();
@@ -36,6 +39,9 @@ public:
     void stop();
     void speedUp();
     void reduceSpeed();
+    void changeTrajectory(double deltaAngle);
+    void ballCollision(Ball* anotherBall);
+    void makeMainBall();
 
     QPainterPath shape() const override;
     QRectF boundingRect() const override;

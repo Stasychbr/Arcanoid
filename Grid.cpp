@@ -1,6 +1,7 @@
 #include "Grid.h"
 #include <random>
 #include <QRandomGenerator>
+#include "Bonus.h"
 
 Grid::Grid(QGraphicsItem* parent, QRectF& area) {
     setParentItem(parent);
@@ -12,8 +13,6 @@ Grid::Grid(QGraphicsItem* parent, QRectF& area) {
         for (int j = 0; j < _horSize; j++) {
             _blocks[i].push_back(generateBlock(blockHeight, blockWidth));
             _blocks[i][j]->setPos(j * blockWidth + 0.5 * blockWidth, i * blockHeight + 0.5 * blockHeight);
-            //_blocks[i][j]->_posX = j; //debug
-            //_blocks[i][j]->_posY = i; //debug 
         }
     }
 }
@@ -22,10 +21,12 @@ Block* Grid::generateBlock(int blockHeight, int blockWidth) {
     std::geometric_distribution<int> blocksDistr(0.4);
     switch (blocksDistr(*QRandomGenerator::global())) {
     case 1:
+        _blocksToDestroy++;
         return (Block*)new SpeedBlock(this, blockHeight, blockWidth);
     case 3:
         return (Block*)new UnbreakableBlock(this, blockHeight, blockWidth);
     default:
+        _blocksToDestroy++;
         return new Block(this, blockHeight, blockWidth);
     }
 }
@@ -36,6 +37,14 @@ Grid::~Grid() {
             delete block;
         }
     }
+}
+
+void Grid::blockWasDestroyed() {
+    _blocksToDestroy--;
+}
+
+bool Grid::isAllDestroyed() {
+    return _blocksToDestroy == 0;
 }
 
 Block* Grid::ballCollision(QGraphicsItem* ball) {
@@ -59,7 +68,36 @@ QPointF Grid::findBonusPlace(Block* block) {
             break;
         }
     }
-    return QPointF(block->x(), ++lowestRow * block->height() + block->height() / 2);
+    return QPointF(block->x(), ++lowestRow * block->height() + Bonus::size());
+}
+
+bool Grid::findFreeSpace(QPointF& start, QPointF& end) {
+    int startPlace = 0, endPlace = 0;
+    for (int i = 0; i < _vertSize; i++) {
+        startPlace = 0;
+        endPlace = 0;
+        for (int j = 0; j < _horSize; j++) {
+            if (!_blocks[i][j]->isVisible()) {
+                startPlace = j;
+                endPlace = startPlace;
+                while (j < _horSize && !_blocks[i][j]->isVisible()) {
+                    endPlace++;
+                    j++;
+                }
+            }
+            if (endPlace - startPlace >= 3) {
+                start = _blocks[i][startPlace]->pos();
+                end = _blocks[i][endPlace - 1]->pos();
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void Grid::blockSize(int& height, int& width) {
+    height = _blocks[0][0]->height();
+    width = _blocks[0][0]->width();
 }
 
 QRectF Grid::boundingRect() const {

@@ -27,6 +27,7 @@ public:
 
     void enlarge();
     void shorten();
+    bool tooShort();
 
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;

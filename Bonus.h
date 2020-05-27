@@ -1,5 +1,4 @@
 #pragma once
-#include <QGraphicsItem>
 #include "GameArea.h"
 class Bonus : public QGraphicsItem {
 public:
@@ -16,7 +15,7 @@ protected:
     Bonus(QGraphicsItem* parent, QPointF& position);
     int _numberOfExecs = 1;
 public:
-    int size();
+    static int size();
     Bonus::BonusType type();
     int numberOfExecutions();
     

@@ -37,6 +37,10 @@ void Platform::shorten() {
     _horSize -= _cutSize;
 }
 
+bool Platform::tooShort() {
+    return _horSize < _cutSize;
+}
+
 QRectF Platform::boundingRect() const {
     return QRectF(-_horSize / 2, -_vertSize / 2, _horSize, _vertSize);
 }

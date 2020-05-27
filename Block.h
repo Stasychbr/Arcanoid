@@ -2,18 +2,18 @@
 
 #include <QGraphicsItem>
 #include "Ball.h"
+#include <QGraphicsObject>
 
-class Block : public QGraphicsItem {
+class Block : public QGraphicsObject {
 protected:
     static const int _maxHp = 4;
     static const int _bonusChance = 2; // 1/n
-    int _width;
-    int _height;
-    int _hp;
-    bool _hasBonus;
+    int _width = 0;
+    int _height = 0;
+    int _hp = 0;
+    int _scoreForHit = 1;
+    bool _hasBonus = false;
 public:
-    //int _posX; //debug
-    //int _posY; // debug
     Block(QGraphicsItem* parent, int height, int width);
     virtual ~Block();
 
@@ -22,7 +22,7 @@ public:
     int hp();
     bool hasBonus();
     
-    virtual void hit(Ball* ball);
+    virtual int hit(Ball* ball);
 
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;

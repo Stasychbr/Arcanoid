@@ -1,4 +1,5 @@
 #include "Arcanoid.h"
+#include <QMessageBox>
 
 Arcanoid::Arcanoid(QWidget *parent):QMainWindow(parent) {
     ui.setupUi(this);
@@ -19,14 +20,10 @@ Arcanoid::Arcanoid(QWidget *parent):QMainWindow(parent) {
     _gameArea = new GameArea(area);
     _scene->addItem(_gameArea);
     _view->setScene(_scene);
-
-    _timer = new QTimer();
-    _timer->start(20);
-
 }
 
 Arcanoid::~Arcanoid() {
-    delete _timer;
     delete _gameArea;
     delete _scene;
 }
+
